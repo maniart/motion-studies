@@ -1,16 +1,6 @@
-function createOnceLog() {
-  var counter = 0;
-  return function onceLog() {
-    if(counter < 1) {
-      console.log.apply(console, arguments);
-    }
-    counter ++;
-  }
-}
-var logger = createOnceLog();
-
 var BLACK = '#000';
 var GREY = '#eee';
+var THRESHOLD = 100;
 
 var containerEl = document.querySelector('#container');
 
@@ -94,20 +84,10 @@ var diffy = Diffy.create({
       for(var j = 0; j < matrix[i].length; j ++) {
         var pos = (j * matrix.length) + i;
 
-        if(matrix[i][j] < 100) {
-
+        if(matrix[i][j] < THRESHOLD) {
           words[pos].react();
-          // words[pos].setActive(true);
-
-        } else {
-
-          // words[pos].el.style.color = '#eee';
-          // words[pos].setActive(false);
-
         }
       }
     }
   }
 });
-console.log(words.length);
-
