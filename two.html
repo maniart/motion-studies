@@ -2,30 +2,33 @@
 <html>
 <head>
   <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+  <script type="text/javascript" src="bower_components/two.js/build/two.min.js"></script>
   <script type="text/javascript" src="bower_components/diffyjs/dist/diffy.min.js"></script>
-  <title>gaze</title>
+  <title>two</title>
   <style type="text/css">
+    html {
+      height: 100%;
+    }
     body {
       color: #000;
       font-size: 30px;
       font-family: 'PT Serif', serif;
+      height: 100%;
+    }
+    .diffy-container {
+      width: 100%;
     }
     #container {
-      width: 80%;
-      margin: 0 10%;
-      position: absolute;
+      width: 650px;
+      height: 500px;
+      margin: 0 auto;
       top: 50%;
-      transform: translateY(-50%);
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      background-color: #eee;
     }
-    .row {
-      float: left;
-      clear: both;
-    }
-    span {
-      margin: 2px;
-      padding: 2px;
-      float: left;
-    }
+
   </style>
 </head>
 <body>

@@ -1,93 +1,87 @@
-var BLACK = '#000';
-var GREY = '#eee';
+var SCALE = 5;
 var THRESHOLD = 100;
+var BASE_DIM = { w: 150, h: 100};
+var RESOLUTION = { x: 15, y: 10};
+var matrix = null;
+
+function updateMatrix(newMatrix) {
+  matrix = newMatrix;
+}
 
 var containerEl = document.querySelector('#container');
+var params = { width: 650, height: 500 };
+var two = new Two(params).appendTo(containerEl);
+var circle;
+var xUnit;
+var yUnit;
+var x;
+var y;
+var centerX;
+var centerY;
 
-function Word(text) {
-  this.text = text;
-  this.el = document.createElement('span');
-  this.el.innerText = this.text;
-  this.timer = null;
-  this.active = false;
-};
+var circles = [];
 
-Word.prototype.setText = function setText(text) {
-  this.text = text;
-  this.el.innerText = text;
-  return this;
-};
+for(var j = 0; j < RESOLUTION.y; j ++) {
+  for(var i = 0; i < RESOLUTION.x; i ++) {
+    // debugger
+    xUnit = BASE_DIM.w / RESOLUTION.x;
+    yUnit = BASE_DIM.h / RESOLUTION.y;
 
-Word.prototype.setActive = function setActive(isActive) {
-  this.active = isActive;
-  return this;
-};
+    x = (i / RESOLUTION.x) *  BASE_DIM.w;
+    y = (j / RESOLUTION.y) *  BASE_DIM.h;
 
-Word.prototype.changeColor = function changeColor(color) {
-  this.el.style.color = color;
-  return this;
-};
+    centerX = x + (xUnit / 2);
+    centerY = y + (yUnit / 2);
 
-Word.prototype.react = function react() {
-  if (this.active) {
+    console.log(centerX, centerY);
+    circle = two.makeCircle(centerX, centerY, 2);
+    circle.noStroke();
+    circle.fill = '#000';
+    circle.scale = 0;
+
+    circles.push(circle);
+
+  }
+}
+
+var group = two.makeGroup(circles);
+group.scale = 5;
+var row;
+var value;
+var circleIndex;
+
+two.bind('update', function(frm) {
+  // initially it's null
+  if(matrix === null) {
     return;
   }
+  for(var i = 0; i < matrix.length; i ++) {
+    var row = matrix[i];
+    for(var j = 0; j < row.length; j ++) {
+      value = row[j];
+      circleIndex = (j * row.length) + i;
+      // debugger
+      if(value < THRESHOLD) {
+        // console.log(circleIndex);
+        // console.log(circleIndex);
 
-  var reset = function() {
-    this.setActive(false).changeColor(GREY);
-    window.clearTimeout(this.timer);
-    this.timer = null;
-  }.bind(this);
-
-  this
-    .setActive(true)
-    .changeColor(BLACK);
-
-  this.timer = window.setTimeout(reset, 500);
-
-  return this;
-};
-
-var text = "Mulvey identifies three \"looks\" or perspectives that occur in film which, she argues, serve to sexually objectify women. The first is the perspective of the male character on screen and how he perceives the female character. The second is the perspective of the spectator as they see the female character on screen. The third \"look\" joins the first two looks together: it is the male audience member's perspective of the male character in the film. This third perspective allows the male audience to take the female character as his own personal sex object because he can relate himself, through looking, to the male character in the film. Gaze the male audience member's perspective of the male character in the film. This third perspective allows the male audience to take the female character as his own personal sex object because he can relate himself, through looking, to the male character Gaze.".split(' ');
-
-var words = [];
-
-var word;
-
-var timer;
-
-var row;
-
-text.forEach(function(value, index) {
-  word = new Word(value);
-  words.push(word);
-
-  if(index % 15 === 0) {
-    row = document.createElement('div');
-    row.className = 'row';
-    containerEl.appendChild(row);
+        group.children[circleIndex].scale = 1;
+      } else {
+        group.children[circleIndex].scale = 0;
+      }
+    }
   }
 
-  row.appendChild(word.el);
+}).play();
 
-});
+
 
 var diffy = Diffy.create({
   resolution: { x: 15, y: 10 },
   sensitivity: 0.5,
   threshold: 20,
   debug: true,
-  containerClassName: 'my-diffy-container',
+  containerClassName: 'diffy-container',
   sourceDimensions: { w: 130, h: 100 },
-  onFrame: function (matrix) {
-    for(var i = 0; i < matrix.length; i ++) {
-      for(var j = 0; j < matrix[i].length; j ++) {
-        var pos = (j * matrix.length) + i;
-
-        if(matrix[i][j] < THRESHOLD) {
-          words[pos].react();
-        }
-      }
-    }
-  }
+  onFrame: updateMatrix
 });
