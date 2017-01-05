@@ -1,0 +1,21 @@
+{
+  "name": "gaze",
+  "authors": [
+    "maniart <mani.art@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "diffyjs": "~1.1.2"
+  }
+}
